@@ -13,7 +13,7 @@ function authmiddleware(req: Request, res: Response, next: NextFunction) {
         if (!decoded) {
             return res.status(401).send("Unauthorized")
         }
-         (req as any).user = { id: (decoded as any).id }; // attach user
+         (req as any).userId = (decoded as any).id; // attach user
         next();
     } catch (error) {
         return res.status(401).send("Unauthorized")
