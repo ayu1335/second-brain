@@ -2,21 +2,23 @@ import type { Request, Response, NextFunction } from 'express';
 import jwt from "jsonwebtoken";
 
 
-function authmiddleware(req: Request, res: Response, next: NextFunction) {
+
+function authMiddleware(req: Request, res: Response, next: NextFunction) {
     try {
-        const token = req.headers.authorization?.split(" ")[1];
+        const token = req.headers.authorization;
         if (!token) {
-            return res.status(401).send({ message: "Unauthorized" });
+            return res.status(401).send({ message: "Unauthorized 1" });
         }
         const decoded = jwt.verify(token, process.env.JWT_SECRET!);
        
         if (!decoded) {
-            return res.status(401).send("Unauthorized")
+            return res.status(401).send("Unauthorized 2")
         }
-         (req as any).userId = (decoded as any).id; // attach user
+        //@ts-ignore
+         req.userId = decoded.id; // attach user
         next();
     } catch (error) {
         return res.status(401).send("Unauthorized")
     }
 }
-export default(authmiddleware)
+export default(authMiddleware)
