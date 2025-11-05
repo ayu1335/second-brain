@@ -6,9 +6,11 @@ const PORT=process.env.PORT || 3000;
 import connectDB  from './connectDB.js';
 import authRoutes from './routes/auth.routes.js';
 import contentRoutes from "./routes/content.routes.js";
+import shareRoutes from "./routes/share.routes.js"
 app.use(express.json());
 app.use("/api/user",authRoutes);
-app.use("/api/user/content",contentRoutes)
+app.use("/api/content",contentRoutes)
+app.use("/api/brain",shareRoutes);
 
 
 
