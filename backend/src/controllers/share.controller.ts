@@ -36,13 +36,8 @@ export const createShareableLink = async (req: Request, res: Response) => {
 
 export const getShareableLink = async (req: Request, res: Response) => {
     try {
-        //@ts-ignore
-        const userId = req.userId;
-        const hash = req.params.hash;
-
-        if (!userId) {
-            return res.status(401).json({ msg: "Unauthorized" });
-        }
+        
+        const hash = req.params.shareLink;
 
         const link = await linkModel.findOne({ hash });
 
