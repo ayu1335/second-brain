@@ -11,10 +11,10 @@ import contentModel from "../model/content.model.js";
 
 // Zod validation schema
 const contentSchema = z.object({
-    link: z.string().url("Invalid link format"),
-    type: z.string(),
+    link: z.string().url(),
+    type: z.string(),   
     title: z.string(),
-    tags: z.array(z.string()).optional(),
+    // tags: z.array(z.string()).optional(),
 });
 
 export const addContent = async (req: Request, res: Response) => {
@@ -31,12 +31,12 @@ export const addContent = async (req: Request, res: Response) => {
             return res.status(401).json({ msg: "Unauthorized: Missing user ID" });
         }
 
-        const { link, type, title, tags } = parsed.data;
+        const { link, title, type } = parsed.data;
         await contentModel.create({
             link,
             type,
             title,
-            tags,
+            // tags,
             //@ts-ignore
             userId: req.userId,
         });

@@ -4,6 +4,6 @@ import { createShareableLink ,getShareableLink} from "../controllers/share.contr
 import authMiddleware from "../middleware/auth.middleware.js";
 
 router.post("/share",authMiddleware,createShareableLink);
-router.get("/share/:shareLink",authMiddleware,getShareableLink);
+router.get("/share/:shareLink",getShareableLink);
 
 export default router;
