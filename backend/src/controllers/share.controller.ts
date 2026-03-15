@@ -1,7 +1,7 @@
 import contentModel from "../model/content.model.js";
 import linkModel from "../model/link.model.js";
 import userModel from "../model/user.model.js";
-import generateRandomHash from "../utils.js";
+import generateRandomHash from "../utils/utils.js";
 import type { Request, Response } from "express";
 
 export const createShareableLink = async (req: Request, res: Response) => {

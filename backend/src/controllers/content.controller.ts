@@ -14,7 +14,7 @@ const contentSchema = z.object({
     link: z.string().url(),
     type: z.string(),   
     title: z.string(),
-    // tags: z.array(z.string()).optional(),
+    tags: z.array(z.string()).optional(),
 });
 
 export const addContent = async (req: Request, res: Response) => {
