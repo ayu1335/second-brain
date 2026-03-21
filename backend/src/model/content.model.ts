@@ -1,13 +1,22 @@
-import { Schema,model } from "mongoose";
+import mongoose, {model, Schema } from "mongoose";
 
-const contentTypes = ['image', 'video', 'article', 'audio']; // Extend as needed
-
-const contentSchema = new Schema({
-  link: { type: String, required: true },
-  type: { type: String, required: true },
-  title: { type: String, required: true },
-  // tags: [{ type: Schema.ObjectId, ref: 'Tag' }], 
-  userId: { type: Schema.ObjectId, ref: 'User', required: true },
+const chunkSchema = new Schema({
+  text: { type: String, required: true },
+  embedding: { type: [Number], required: true }, // vector array
 });
 
-export default model('content', contentSchema);
+const contentSchema = new Schema(
+  {
+    userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    type: { type: String, enum: ["youtube", "tweet"], required: true },
+    title: { type: String },
+    link: { type: String, required: true },
+    videoId: { type: String },
+    summary: { type: String },
+    tags: [{ type: String }],
+    chunks: [chunkSchema], // array of { text, embedding }
+  },
+  { timestamps: true }
+);
+
+export default model("Content", contentSchema);

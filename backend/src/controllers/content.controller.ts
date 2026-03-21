@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 import { z } from "zod";
-import contentModel from "../model/content.model.js";
+import { addContent as addContentService ,getContent as getContentService , deleteContent as deleteContentService} from "../services/content.service.js";
+
 
 // Extend Express Request to include userId added by authMiddleware
 // declare module "express-serve-static-core" {
@@ -18,34 +19,35 @@ const contentSchema = z.object({
 });
 
 export const addContent = async (req: Request, res: Response) => {
-    try {
-        const parsed = contentSchema.safeParse(req.body);
-        if (!parsed.success) {
-            return res.status(400).json({
-                msg: "Invalid input",
-                error: parsed.error.issues,
-            });
-        }
-        //@ts-ignore
-        if (!req.userId) {
-            return res.status(401).json({ msg: "Unauthorized: Missing user ID" });
-        }
+  try {
+    const parsed = contentSchema.safeParse(req.body);
 
-        const { link, title, type } = parsed.data;
-        await contentModel.create({
-            link,
-            type,
-            title,
-            // tags,
-            //@ts-ignore
-            userId: req.userId,
-        });
-
-        return res.status(201).json({ msg: "Content added successfully" });
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({ msg: "Server Error", error });
+    if (!parsed.success) {
+      return res.status(400).json({
+        msg: "Invalid input",
+        error: parsed.error.issues,
+      });
     }
+    ///@ts-ignore
+    const userId = req.userId;
+
+    if (!userId) {
+      return res.status(401).json({
+        msg: "Unauthorized",
+      });
+    }
+
+    await addContentService(userId, parsed.data);
+
+    return res.status(201).json({
+      msg: "Content added successfully",
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      msg: "Server error",
+    });
+  }
 };
 
 export const getContent = async (req: Request, res: Response) => {
@@ -55,7 +57,7 @@ export const getContent = async (req: Request, res: Response) => {
             return res.status(401).json({ msg: "Unauthorized" });
         }
         //@ts-ignore
-        const contents = await contentModel.find({ userId: req.userId });
+        const contents = await getContentService(req.userId);
         return res.status(200).json(contents);
     } catch (error) {
         return res.status(500).json({ msg: "Server Error", error });
@@ -69,12 +71,8 @@ export const deleteContent = async (req: Request, res: Response) => {
         if (!req.userId) {
             return res.status(401).json({ msg: "Unauthorized" });
         }
-
-        const content = await contentModel.findOneAndDelete({
-            _id: id,
-            //@ts-ignore
-            userId: req.userId,
-        });
+        //@ts-ignore
+        const content = await deleteContentService(req.userId, id);
 
         if (!content) {
             return res.status(404).json({ msg: "Content not found" });
