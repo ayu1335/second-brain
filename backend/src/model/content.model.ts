@@ -1,4 +1,4 @@
-import mongoose, {model, Schema } from "mongoose";
+import {model, Schema } from "mongoose";
 
 const chunkSchema = new Schema({
   text: { type: String, required: true },

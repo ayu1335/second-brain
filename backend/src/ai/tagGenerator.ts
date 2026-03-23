@@ -7,7 +7,7 @@ const ai = new GoogleGenAI({ apiKey: env.GEMINI_API_KEY || "" });
 
 export const generateTags = async (summary: string): Promise<string[]> => {
   const response = await ai.models.generateContent({
-    model: "gemini-2.0-flash",
+    model: "gemini-2.5-flash",
     contents: `Generate 5 short relevant tags for this content summary. Return only a JSON array of strings, nothing else.
     
 Summary:

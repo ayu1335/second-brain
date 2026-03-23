@@ -11,9 +11,8 @@ export const addContent = async (userId: string, data: any) => {
     throw new Error("Unsupported link type");
   }
   else if (type === "youtube") {
-    
+    return await processYoutubeVideo(userId, title, link);
   }
-   return await processYoutubeVideo(userId, title, link);
 };
 
 
